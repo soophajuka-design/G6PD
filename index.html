@@ -2,129 +2,45 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G6PD Fluorescence Analyzer</title>
-    <link rel="manifest" href="/manifest.json">
-    <style>
-        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; padding: 20px; }
-        #video-container { position: relative; display: inline-block; margin-top: 10px; border: 5px solid #333; border-radius: 10px; overflow: hidden; }
-        video { width: 100%; max-width: 500px; height: auto; }
-        
-        /* วงกลม Overlay สำหรับเล็งจุด Spot */
-        #roi-guide {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px; height: 100px; /* ขนาดของจุด Spot */
-            border: 4px solid red; border-radius: 50%;
-            pointer-events: none; /* ให้คลิกทะลุได้ */
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        #result-area { margin-top: 20px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #intensity-value { font-size: 2em; font-weight: bold; color: blue; }
-        #status { font-size: 1.5em; font-weight: bold; }
-        button { padding: 10px 20px; font-size: 1.2em; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; margin-top: 10px;}
-        .normal { color: green; }
-        .deficient { color: red; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G6PD Pro Analyzer v1.1</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <h1>G6PD Analyzer</h1>
-    <p>วางจุด Spot ของกระดาษกรองให้อยู่ภายในวงกลมสีแดงภายใต้แสง UV</p>
-
-    <div id="video-container">
-        <video id="webcam" autoplay playsinline></video>
-        <div id="roi-guide"></div> </div>
-
-    <br>
-    <button id="analyze-btn">วิเคราะห์ผล</button>
-    
-    <canvas id="analysis-canvas" style="display:none;"></canvas>
-
-    <div id="result-area">
-        <div>ความเข้มแสง (0-255): <span id="intensity-value">-</span></div>
-        <div>ผลการตรวจสอบ: <span id="status">-</span></div>
+    <div class="header">
+        <h2>G6PD Fluorescence Analyzer 🧪</h2>
+        <p>PLATE: 7.1 x 12.8 cm | GRID: 4 x 5</p>
     </div>
 
-    <script>
-        const video = document.getElementById('webcam');
-        const canvas = document.getElementById('analysis-canvas');
-        const btn = document.getElementById('analyze-btn');
-        const intensityDisplay = document.getElementById('intensity-value');
-        const statusDisplay = document.getElementById('status');
+    <div id="camera-container">
+        <video id="webcam" autoplay playsinline></video>
+        <div id="grid-overlay"></div>
+    </div>
 
-        // 1. เริ่มเปิดกล้องหลัง
-        async function startCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "environment" }, // ใช้กล้องหลัง
-                    audio: false 
-                });
-                video.srcObject = stream;
-            } catch (err) {
-                console.error("Error accessing camera: ", err);
-                alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาอนุญาตการเข้าถึงกล้อง");
-            }
-        }
+    <div class="controls">
+        <button id="capture-btn">📸 วิเคราะห์ผลภาพนิ่ง</button>
+        <div class="legend">
+            <span>⚪ Sample</span>
+            <span style="color: #00ff00;">🟢 Normal</span>
+            <span style="color: #ff4444;">🔴 Deficient</span>
+        </div>
+    </div>
 
-        // 2. ฟังก์ชันหลักในการวิเคราะห์ภาพ
-        function analyzeSpot() {
-            const context = canvas.getContext('2d');
-            
-            // ตั้งขนาด Canvas ให้เท่ากับวิดีโอปัจจุบัน
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            // วาดภาพจาก Video ลงบน Canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    <div id="results">
+        <table id="result-table">
+            <thead>
+                <tr>
+                    <th>ตำแหน่ง</th>
+                    <th>ประเภท</th>
+                    <th>ความสว่าง</th>
+                    <th>สรุปผล</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-            // คำนวณพิกัดของ ROI (Region of Interest) ตรงกลางภาพ
-            const roiSize = 100; // ขนาดพื้นที่วิเคราะห์ (px)
-            const startX = (canvas.width / 2) - (roiSize / 2);
-            const startY = (canvas.height / 2) - (roiSize / 2);
-
-            // ดึงข้อมูลพิกเซลในช่วง ROI
-            const imageData = context.getImageData(startX, startY, roiSize, roiSize);
-            const data = imageData.data; // เป็น Array [r, g, b, a, r, g, b, a, ...]
-
-            let totalGrayscale = 0;
-            let pixelCount = 0;
-
-            // 3. วนลูปคำนวณความสว่าง (Grayscale)
-            for (let i = 0; i < data.length; i += 4) {
-                const r = data[i];
-                const g = data[i + 1];
-                const b = data[i + 2];
-                
-                // แปลงเป็น Grayscale (ความสว่าง) โดยใช้สูตร Luminosity
-                // เหมาะสำหรับแสงสีเขียว/ฟ้าของ Fluorescence
-                const avg = (0.299 * r + 0.587 * g + 0.114 * b);
-                
-                totalGrayscale += avg;
-                pixelCount++;
-            }
-
-            const meanIntensity = totalGrayscale / pixelCount;
-            intensityDisplay.innerText = meanIntensity.toFixed(2);
-
-            // 4. ตัดสินผล (Thresholding) - ส่วนนี้ต้องทำ Calibration
-            // สมมติค่า Threshold เบื้องต้นที่ 50 (0-255)
-            const threshold = 50; 
-
-            if (meanIntensity > threshold) {
-                statusDisplay.innerText = "Normal (มีแสง)";
-                statusDisplay.className = "normal";
-            } else {
-                statusDisplay.innerText = "Deficient (ไม่มีแสง)";
-                statusDisplay.className = "deficient";
-            }
-        }
-
-        btn.addEventListener('click', analyzeSpot);
-        
-        // เริ่มกล้องเมื่อโหลดหน้าเว็บ
-        window.addEventListener('load', startCamera);
-    </script>
+    <canvas id="proc-canvas" style="display:none;"></canvas>
+    <script src="app.js"></script>
 </body>
 </html>
