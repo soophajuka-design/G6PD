@@ -1,0 +1,31 @@
+<body>
+
+<h3>G6PD Analyzer</h3>
+
+<!-- CAMERA BLOCK -->
+<div id="cameraWrapper">
+
+  <div id="container">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <!-- 🔽 LEGEND ใต้ live view -->
+  <div id="legend">
+    <div><span class="dot sample"></span> Sample</div>
+    <div><span class="dot normal"></span> ICQ-Normal</div>
+    <div><span class="dot deficient"></span> ICQ-Deficient</div>
+  </div>
+
+</div>
+
+<!-- 🔻 CONTROLS (นอก live view) -->
+<div id="controls">
+  <button onclick="startCameraDirect()">Start</button>
+  <button onclick="setMode('normal')">Normal</button>
+  <button onclick="setMode('deficient')">Deficient</button>
+  <button onclick="analyze()">Analyze</button>
+  <button onclick="resetApp()">Reset</button>
+</div>
+
+</body>
