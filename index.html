@@ -1,43 +1,32 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
+<head> 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G6PD Analyzer Pro v2.0</title>
+    <title>G6PD Auto-Detection System</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app-container">
-        <header class="header-compact">
-            <div id="live-clock">--/--/---- --:--:--</div>
-            <strong>G6PD Real-time HSV Analyzer</strong> | 365nm UV
-        </header>
+</head><video id="video" autoplay playsinline style="display:none;"></video>
+    <div class="canvas-wrapper">
+         <canvas id="mainCanvas"></canvas>
+    </div>
 
-        <div id="camera-container">
-            <video id="webcam" autoplay playsinline></video>
-            <div id="grid-overlay"></div>
+<body>
+    
+    <div class="container">
+        <h2>G6PD Analysis - Auto Spot Detection</h2>
+        
+        <div id="summary-bar" class="summary">
+            S=0(0/0/0) | QCN=0(0/0) | QCD=0(0/0) | T=0
+        </div>
+
+        <div class="canvas-wrapper">
+            <canvas id="mainCanvas"></canvas>
         </div>
 
         <div class="controls">
-            <button id="save-btn" class="btn-primary">💾 บันทึกผลภาพถ่าย</button>
-            <button id="reset-btn" class="btn-secondary">🔄 Reset</button>
-        </div>
-
-        <div id="table-area">
-            <table id="result-table">
-                <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Type</th>
-                        <th>Intensity (V)</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
+            <p>คำแนะนำ: แตะที่จุดเพื่อเปลี่ยนสถานะ (S -> N -> D)</p>
+            <button onclick="resetDetection()">ตรวจจับใหม่ (Reset)</button>
         </div>
     </div>
-    <canvas id="proc-canvas" style="display:none;"></canvas>
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
