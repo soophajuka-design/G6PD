@@ -2,26 +2,29 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G6PD Analyzer PWA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G6PD Analyzer</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="app-container">
-        <div class="live-view-section">
-            <div class="header-info">
-                <p id="timestamp">Date/Time: --/--/-- --:--</p>
-                <p>Status: UV 365nm Analysis Active (Max 2 lines)</p>
+    <div class="main-container">
+        <div class="view-section">
+            <div class="top-meta">
+                <div id="dt-now">Date/Time: --/--/-- --:--</div>
+                <div id="status-line">Status: UV 365nm Active<br>Target: G6PD Fluorescence</div>
             </div>
-            <div class="video-wrapper">
-                <video id="webcam" autoplay playsinline></video>
-                <canvas id="grid-overlay"></canvas>
+            
+            <div class="camera-container">
+                <video id="video" autoplay playsinline></video>
+                <div class="grid-overlay" id="grid">
+                    </div>
             </div>
         </div>
 
-        <div class="table-section">
-            <table id="result-table">
+        <button id="cap-btn">CAPTURE & SAVE</button>
+
+        <div class="result-section">
+            <table id="res-table">
                 <thead>
                     <tr>
                         <th>Pos</th>
@@ -29,10 +32,9 @@
                         <th>Intensity</th>
                     </tr>
                 </thead>
-                <tbody id="table-body">
+                <tbody id="res-body">
                     </tbody>
             </table>
-            <button id="capture-btn">CAPTURE & SAVE</button>
         </div>
     </div>
     <script src="app.js"></script>
