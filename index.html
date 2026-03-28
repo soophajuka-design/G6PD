@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G6PD Analyzer Pro</title>
+    <title>G6PD Pro Analyzer v1.2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-wrapper">
-        <header class="compact-header">
-            <div class="info">
-                G6PD Fluorescence Analysis | UV 365nm<br>
-                Plate: 7.1x12.8 cm | Grid: 4x5 | Status: Active
-            </div>
-        </header>
-
-        <main id="camera-container">
-            <video id="webcam" autoplay playsinline></video>
-            <div id="grid-overlay"></div>
-        </main>
-
-        <section class="action-bar">
-            <button id="capture-btn">📸 วิเคราะห์และบันทึกผล</button>
-        </section>
-
-        <footer id="results-area">
-            <table id="result-table">
-                <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Type</th>
-                        <th>Blue Int.</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </footer>
+    <div class="header">
+        <div class="compact-text">
+            Live Analysis: UV 365nm | Target: G6PD Fluorescence<br>
+            Align filter paper (7.1 x 12.8 cm) within the 4x5 grid boundary.
+        </div>
     </div>
+
+    <div id="camera-container">
+        <video id="webcam" autoplay playsinline></video>
+        <div id="grid-overlay"></div>
+    </div>
+
+    <div class="controls">
+        <button id="capture-btn">📸 วิเคราะห์ผลภาพนิ่ง</button>
+    </div>
+
+    <div id="results">
+        <table id="result-table">
+            <thead>
+                <tr>
+                    <th>ตำแหน่ง</th>
+                    <th>ประเภทวงกลม</th>
+                    <th>ความสว่าง</th>
+                    <th>สรุปผล (Result)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
     <canvas id="proc-canvas" style="display:none;"></canvas>
     <script src="app.js"></script>
 </body>
