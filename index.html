@@ -2,28 +2,25 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G6PD Analyzer - Live Scan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G6PD Pro Analyzer</title>
     <link rel="stylesheet" href="style.css">
+    <script async src="https://docs.opencv.org/4.5.0/opencv.js" onload="cvReady()"></script>
 </head>
 <body>
     <div class="app-container">
-        <header>
-            <h2>G6PD Real-time Analysis 🧪</h2>
-            <div id="summary-bar" class="summary-panel">
-                กำลังโหลดระบบ...
-            </div>
-        </header>
+        <div id="summary-bar" class="summary">S=0(0/0/0) | T=0</div>
 
-        <main class="viewport">
+        <div class="viewport">
             <video id="video" autoplay playsinline style="display:none;"></video>
             <canvas id="outputCanvas"></canvas>
-        </main>
+        </div>
 
-        <footer>
-            <button id="btn-camera" class="btn-primary">เปิดกล้อง</button>
-            <p class="hint">แตะที่หยดเลือดเพื่อเปลี่ยนสถานะ (S → N → D)</p>
-        </footer>
+        <div class="control-panel">
+            <button id="btn-auto" onclick="runAutoDetect()" class="btn-sec" disabled>Auto Detect</button>
+            <button id="btn-capture" onclick="handleCapture()" class="btn-main">Capture</button>
+            <button id="btn-reset" onclick="handleReset()" class="btn-sec">Reset</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
