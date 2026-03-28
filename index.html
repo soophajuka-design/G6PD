@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="th">
-<head> 
+<head>
     <meta charset="UTF-8">
-    <title>G6PD Auto-Detection System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G6PD Analyzer - Live Scan</title>
     <link rel="stylesheet" href="style.css">
-</head><video id="video" autoplay playsinline style="display:none;"></video>
-    <div class="canvas-wrapper">
-         <canvas id="mainCanvas"></canvas>
-    </div>
-
+</head>
 <body>
-    
-    <div class="container">
-        <h2>G6PD Analysis - Auto Spot Detection</h2>
-        
-        <div id="summary-bar" class="summary">
-            S=0(0/0/0) | QCN=0(0/0) | QCD=0(0/0) | T=0
-        </div>
+    <div class="app-container">
+        <header>
+            <h2>G6PD Real-time Analysis 🧪</h2>
+            <div id="summary-bar" class="summary-panel">
+                กำลังโหลดระบบ...
+            </div>
+        </header>
 
-        <div class="canvas-wrapper">
-            <canvas id="mainCanvas"></canvas>
-        </div>
+        <main class="viewport">
+            <video id="video" autoplay playsinline style="display:none;"></video>
+            <canvas id="outputCanvas"></canvas>
+        </main>
 
-        <div class="controls">
-            <p>คำแนะนำ: แตะที่จุดเพื่อเปลี่ยนสถานะ (S -> N -> D)</p>
-            <button onclick="resetDetection()">ตรวจจับใหม่ (Reset)</button>
-        </div>
+        <footer>
+            <button id="btn-camera" class="btn-primary">เปิดกล้อง</button>
+            <p class="hint">แตะที่หยดเลือดเพื่อเปลี่ยนสถานะ (S → N → D)</p>
+        </footer>
     </div>
     <script src="script.js"></script>
 </body>
