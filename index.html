@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G6PD Pro Analyzer v1.4</title>
+    <title>G6PD Analyzer Pro v2.0</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
         <header class="header-compact">
-            G6PD Analysis: UV 365nm Mode<br>
-            Grid 4x5 | Target: Blue Fluorescence
+            <div id="live-clock">--/--/---- --:--:--</div>
+            <strong>G6PD Real-time HSV Analyzer</strong> | 365nm UV
         </header>
 
         <div id="camera-container">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="controls">
-            <button id="capture-btn" class="btn-primary">📸 วิเคราะห์ผล</button>
+            <button id="save-btn" class="btn-primary">💾 บันทึกผลภาพถ่าย</button>
             <button id="reset-btn" class="btn-secondary">🔄 Reset</button>
         </div>
 
@@ -29,11 +29,11 @@
                     <tr>
                         <th>Pos</th>
                         <th>Type</th>
-                        <th>Intensity</th>
+                        <th>Intensity (V)</th>
                         <th>Result</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="table-body"></tbody>
             </table>
         </div>
     </div>
