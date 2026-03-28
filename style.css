@@ -1,50 +1,66 @@
-body { font-family: -apple-system, sans-serif; margin: 0; background: #000; color: #fff; text-align: center; }
+body { font-family: sans-serif; margin: 0; background: #000; color: white; text-align: center; overflow-x: hidden; }
 
-.app-wrapper { display: flex; flex-direction: column; height: 100vh; }
-
-/* Header: ตัวอักษรเล็ก ชิดกัน ไม่เกิน 2 บรรทัด */
-.compact-header { 
-    padding: 6px; background: #1a1a1a; border-bottom: 1px solid #333; 
-    font-size: 11px; line-height: 1.2; text-align: left;
+/* ควบคุมข้อความด้านบน: เล็ก, ชิด, ไม่เกิน 2 บรรทัด */
+.header { padding: 5px; background: #111; border-bottom: 1px solid #333; }
+.compact-text {
+    font-size: 11px;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-align: left;
+    padding-left: 10px;
 }
 
+/* จัดเลย์เอาต์แนวตั้งให้ตรงกับกระดาษ */
 #camera-container {
-    position: relative; width: 92vw; margin: 8px auto;
-    aspect-ratio: 7.1 / 12.8; border: 1px solid #444;
-    background: #050505; overflow: hidden;
+    position: relative;
+    width: 90vw;
+    max-width: 400px;
+    margin: 10px auto;
+    aspect-ratio: 7.1 / 12.8; /* ปรับเป็นแนวตั้ง */
+    border: 2px solid #555;
+    background: black;
+    overflow: hidden;
 }
 
 video { width: 100%; height: 100%; object-fit: cover; }
 
+/* ปรับ Grid เป็น 4 คอลัมน์ 5 แถว (แนวตั้ง) */
 #grid-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
 }
 
-.grid-cell { border: 0.1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; }
+.grid-cell {
+    border: 0.5px solid rgba(255,255,255,0.1); /* เส้นไกด์บางๆ */
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer;
+}
 
-/* การตั้งค่าวงกลม (Stroke Only) */
 .spot {
-    width: 65%; aspect-ratio: 1/1; border-radius: 50%;
-    background: transparent; border: 2px dashed rgba(255,255,255,0.2); /* Default: ND */
-    transition: 0.2s;
+    width: 60%; aspect-ratio: 1/1;
+    border: 2px solid rgba(255,255,255,0.3); 
+    border-radius: 50%;
+    background: transparent; /* ไม่เติมสีพื้นหลัง */
+    transition: 0.3s;
 }
 
-.spot.sample { border: 2.5px solid #ffffff; }    /* 1st Tab: White */
-.spot.normal { border: 2.5px solid #00ff00; }    /* 2nd Tab: Green */
-.spot.deficient { border: 2.5px solid #ff4444; } /* 3rd Tab: Red */
+/* เปลี่ยนเฉพาะสีเส้นรอบวงเมื่อ Tab เลือก */
+.spot.normal { border-color: #00ff00; }
+.spot.partial { border-color: #ffa500; }
+.spot.deficient { border-color: #ff4444; }
 
-#results-area { flex: 1; padding: 10px; overflow-y: auto; background: #000; }
+#results { padding: 10px; max-height: 35vh; overflow-y: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
-th, td { border: 1px solid #222; padding: 8px; text-align: center; }
+th, td { border: 1px solid #333; padding: 6px; text-align: center; }
 
-/* สีข้อความผลลัพธ์ */
+/* สีข้อความผลตรวจวิเคราะห์ตามเกณฑ์ */
 .text-normal { color: #00ff00; font-weight: bold; }
 .text-partial { color: #ffa500; font-weight: bold; }
 .text-deficient { color: #ff4444; font-weight: bold; }
-.text-nd { color: #666; }
 
-button { 
-    width: 90%; padding: 14px; background: #007bff; color: white; 
-    border: none; border-radius: 8px; font-weight: bold; margin: 5px 0;
-}
+button { width: 90%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 8px; border: none; background: #007bff; color: white; margin: 10px; }
