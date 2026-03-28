@@ -1,49 +1,83 @@
-const gridContainer = document.getElementById('grid-container');
-const tableBody = document.getElementById('table-body');
-const video = document.getElementById('video');
+const gridOverlay = document.getElementById('grid-overlay');
+const video = document.getElementById('webcam');
+const spotsData = []; 
 
-const labels = ['A1','A2','A3','B1','B2','B3','C1','C2','C3'];
+// ระบบตั้งชื่อคอลัมน์ A, B, C, D
+const colsLabel = ['A', 'B', 'C', 'D'];
 
-async function startCamera() {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-    video.srcObject = stream;
+// สร้าง Grid แนวตั้ง 4x5 (รวม 20 จุด)
+for (let i = 0; i < 20; i++) {
+    const colIndex = i % 4;
+    const rowIndex = Math.floor(i / 4) + 1;
+    const positionName = `${colsLabel[colIndex]}${rowIndex}`; // เช่น A1, B1
+
+    const cell = document.createElement('div');
+    cell.className = 'grid-cell';
+    
+    const spot = document.createElement('div');
+    spot.className = 'spot';
+    spot.id = `spot-${i}`;
+    
+    // เปลี่ยนเฉพาะคลาสของเส้นรอบวง
+    let status = 'sample'; 
+    cell.onclick = () => {
+        if (status === 'sample') { status = 'normal'; spot.className = 'spot normal'; }
+        else if (status === 'normal') { status = 'deficient'; spot.className = 'spot deficient'; }
+        else { status = 'sample'; spot.className = 'spot'; }
+        spotsData[i].type = status;
+    };
+
+    cell.appendChild(spot);
+    gridOverlay.appendChild(cell);
+    spotsData.push({ id: i, pos: positionName, type: 'sample', value: 0 });
 }
 
-function initUI() {
-    labels.forEach((label, index) => {
-        // สร้าง Grid Item
-        const item = document.createElement('div');
-        item.className = 'grid-item';
-        item.onclick = () => selectTab(index);
-        gridContainer.appendChild(item);
+// เปิดกล้อง
+navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(stream => video.srcObject = stream);
 
-        // สร้างแถวตาราง
-        const row = document.createElement('tr');
-        row.id = `row-${index}`;
-        row.innerHTML = `<td>${label}</td><td class="res">--</td><td class="val">0%</td>`;
-        tableBody.appendChild(row);
-    });
-}
+document.getElementById('capture-btn').onclick = () => {
+    const canvas = document.getElementById('proc-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
 
-function selectTab(index) {
-    document.querySelectorAll('.grid-item').forEach(el => el.classList.remove('active'));
-    gridContainer.children[index].classList.add('active');
-}
+    const tbody = document.querySelector('#result-table tbody');
+    tbody.innerHTML = '';
 
-// จำลองการอัปเดต Real-time (จะเชื่อมกับ Logic HSV ในขั้นตอนถัดไป)
-setInterval(() => {
-    const activeIdx = Array.from(gridContainer.children).findIndex(el => el.classList.contains('active'));
-    if (activeIdx !== -1) {
-        const mockVal = Math.floor(Math.random() * 100);
-        const row = document.getElementById(`row-${activeIdx}`);
-        const resCell = row.querySelector('.res');
+    // คำนวณขนาดเซลล์ใหม่ตามแนวตั้ง (4 คอลัมน์, 5 แถว)
+    const cellW = canvas.width / 4;
+    const cellH = canvas.height / 5;
+
+    spotsData.forEach((spot, i) => {
+        const col = i % 4;
+        const row = Math.floor(i / 4);
         
-        row.querySelector('.val').innerText = mockVal + '%';
-        if (mockVal > 70) { resCell.innerText = 'Normal'; resCell.className = 'res status-normal'; }
-        else if (mockVal > 30) { resCell.innerText = 'Partial'; resCell.className = 'res status-partial'; }
-        else { resCell.innerText = 'Deficient'; resCell.className = 'res status-deficient'; }
-    }
-}, 1000);
+        const imgData = ctx.getImageData(col * cellW + (cellW*0.2), row * cellH + (cellH*0.2), cellW*0.6, cellH*0.6);
+        let sum = 0;
+        
+        // *จุดที่ต้องพัฒนาต่อ: ปัจจุบันใช้สมการ Grayscale พื้นฐาน
+        for (let j = 0; j < imgData.data.length; j += 4) {
+            sum += (imgData.data[j] * 0.299 + imgData.data[j+1] * 0.587 + imgData.data[j+2] * 0.114);
+        }
+        const avg = sum / (imgData.data.length / 4);
+        
+        // กำหนดเกณฑ์และคลาสสีข้อความ
+        let resultText = '';
+        let resultClass = '';
+        if (avg > 60) { resultText = 'Normal'; resultClass = 'text-normal'; }
+        else if (avg > 30) { resultText = 'Partial Deficient'; resultClass = 'text-partial'; }
+        else { resultText = 'Deficient'; resultClass = 'text-deficient'; }
 
-startCamera();
-initUI();
+        // สร้างตารางแสดงผลตรงตามตำแหน่ง
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${spot.pos}</td>
+            <td>${spot.type.toUpperCase()}</td>
+            <td>${avg.toFixed(1)}</td>
+            <td class="${resultClass}">${resultText}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+};
