@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G6PD Analyzer</title>
+    <title>G6PD Analyzer V2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="main-container">
-        <div class="view-section">
-            <div class="top-meta">
-                <div id="dt-now">Date/Time: --/--/-- --:--</div>
-                <div id="status-line">Status: UV 365nm Active<br>Target: G6PD Fluorescence</div>
+    <div class="app-container">
+        <div class="camera-section">
+            <div class="info-overlay">
+                <p id="live-clock">Date/Time: --/--/-- --:--</p>
+                <p>Status: UV 365nm Analysis Active<br>Target: G6PD Fluorescence</p>
             </div>
-            
-            <div class="camera-container">
-                <video id="video" autoplay playsinline></video>
-                <div class="grid-overlay" id="grid">
-                    </div>
-            </div>
+            <video id="video" autoplay playsinline></video>
+            <div class="grid-layer" id="grid-container">
+                </div>
         </div>
 
-        <button id="cap-btn">CAPTURE & SAVE</button>
+        <div class="control-bar">
+            <button id="capture-btn">CAPTURE & SAVE RESULT</button>
+        </div>
 
-        <div class="result-section">
-            <table id="res-table">
+        <div class="table-section">
+            <table id="result-table">
                 <thead>
                     <tr>
                         <th>Pos</th>
@@ -32,7 +31,7 @@
                         <th>Intensity</th>
                     </tr>
                 </thead>
-                <tbody id="res-body">
+                <tbody id="table-body">
                     </tbody>
             </table>
         </div>
