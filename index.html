@@ -2,26 +2,37 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>G6PD Pro Analyzer</title>
     <link rel="stylesheet" href="style.css">
     <script async src="https://docs.opencv.org/4.5.0/opencv.js" onload="cvReady()"></script>
 </head>
 <body>
     <div class="app-container">
-        <div id="summary-bar" class="summary">S=0(0/0/0) | T=0</div>
+        <header id="summary-bar" class="summary">
+            <span>กำลังโหลดระบบ...</span>
+        </header>
 
-        <div class="viewport">
+        <main class="viewport">
             <video id="video" autoplay playsinline style="display:none;"></video>
             <canvas id="outputCanvas"></canvas>
-        </div>
+            
+            <div id="loading-spinner" class="spinner"></div>
+        </main>
 
-        <div class="control-panel">
-            <button id="btn-auto" onclick="runAutoDetect()" class="btn-sec" disabled>Auto Detect</button>
-            <button id="btn-capture" onclick="handleCapture()" class="btn-main">Capture</button>
-            <button id="btn-reset" onclick="handleReset()" class="btn-sec">Reset</button>
-        </div>
+        <footer class="control-panel">
+            <button id="btn-auto" onclick="runAutoDetect()" class="btn-sec" disabled title="รอโหลด OpenCV">
+                Auto Detect
+            </button>
+            <button id="btn-capture" onclick="handleCapture()" class="btn-main">
+                Capture
+            </button>
+            <button id="btn-reset" onclick="handleReset()" class="btn-sec">
+                Reset
+            </button>
+        </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
