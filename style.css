@@ -1,66 +1,46 @@
-body { font-family: sans-serif; margin: 0; background: #000; color: white; text-align: center; overflow-x: hidden; }
+body { font-family: sans-serif; margin: 0; background: #000; color: #fff; overflow: hidden; }
+.app-container { display: flex; flex-direction: column; height: 100vh; align-items: center; }
 
-/* ควบคุมข้อความด้านบน: เล็ก, ชิด, ไม่เกิน 2 บรรทัด */
-.header { padding: 5px; background: #111; border-bottom: 1px solid #333; }
-.compact-text {
-    font-size: 11px;
-    line-height: 1.2;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    text-align: left;
-    padding-left: 10px;
+.header-compact {
+    width: 100%; padding: 5px 10px; background: #1a1a1a;
+    font-size: 10px; line-height: 1.1; text-align: left; border-bottom: 1px solid #333;
 }
 
-/* จัดเลย์เอาต์แนวตั้งให้ตรงกับกระดาษ */
+/* Live View: 90% ของหน้าจอ ชิดบน */
 #camera-container {
-    position: relative;
-    width: 90vw;
-    max-width: 400px;
-    margin: 10px auto;
-    aspect-ratio: 7.1 / 12.8; /* ปรับเป็นแนวตั้ง */
-    border: 2px solid #555;
-    background: black;
-    overflow: hidden;
+    position: relative; width: 90vw; margin-top: 5px;
+    aspect-ratio: 7.1 / 12.8; background: #050505; border: 1px solid #444;
 }
 
 video { width: 100%; height: 100%; object-fit: cover; }
 
-/* ปรับ Grid เป็น 4 คอลัมน์ 5 แถว (แนวตั้ง) */
+/* Grid View: เล็กกว่า Live View ด้านละ 10px */
 #grid-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
+    display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 1fr);
 }
 
-.grid-cell {
-    border: 0.5px solid rgba(255,255,255,0.1); /* เส้นไกด์บางๆ */
-    display: flex; justify-content: center; align-items: center;
-    cursor: pointer;
-}
+.grid-cell { border: 0.1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; }
 
+/* วงกลม (Stroke Only) */
 .spot {
-    width: 60%; aspect-ratio: 1/1;
-    border: 2px solid rgba(255,255,255,0.3); 
-    border-radius: 50%;
-    background: transparent; /* ไม่เติมสีพื้นหลัง */
-    transition: 0.3s;
+    width: 70%; aspect-ratio: 1/1; border-radius: 50%;
+    background: transparent; border: 2px dashed rgba(255,255,255,0.2);
 }
+.spot.sample { border: 2.5px solid #ffffff; border-style: solid; }    /* ขาว */
+.spot.normal { border: 2.5px solid #00ff00; border-style: solid; }    /* เขียว */
+.spot.deficient { border: 2.5px solid #ff4444; border-style: solid; } /* แดง */
 
-/* เปลี่ยนเฉพาะสีเส้นรอบวงเมื่อ Tab เลือก */
-.spot.normal { border-color: #00ff00; }
-.spot.partial { border-color: #ffa500; }
-.spot.deficient { border-color: #ff4444; }
+/* ตารางและสีข้อความ */
+#table-area { flex: 1; width: 100%; overflow-y: auto; padding: 5px; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+th, td { border: 1px solid #222; padding: 6px; text-align: center; }
 
-#results { padding: 10px; max-height: 35vh; overflow-y: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-th, td { border: 1px solid #333; padding: 6px; text-align: center; }
-
-/* สีข้อความผลตรวจวิเคราะห์ตามเกณฑ์ */
 .text-normal { color: #00ff00; font-weight: bold; }
 .text-partial { color: #ffa500; font-weight: bold; }
 .text-deficient { color: #ff4444; font-weight: bold; }
+.text-nd { color: #555; }
 
-button { width: 90%; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 8px; border: none; background: #007bff; color: white; margin: 10px; }
+.controls { display: flex; width: 90%; gap: 10px; margin: 10px 0; }
+.btn-primary { flex: 2; padding: 12px; background: #007bff; color: #fff; border: none; border-radius: 6px; font-weight: bold; }
+.btn-secondary { flex: 1; padding: 12px; background: #444; color: #fff; border: none; border-radius: 6px; }
