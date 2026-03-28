@@ -1,41 +1,49 @@
-const gridContainer = document.getElementById('grid');
-const resBody = document.getElementById('res-body');
+const gridContainer = document.getElementById('grid-container');
+const tableBody = document.getElementById('table-body');
+const video = document.getElementById('video');
 
-// สร้าง Grid 3x3 และตารางเริ่มต้น
-const positions = ['A1','A2','A3','B1','B2','B3','C1','C2','C3'];
+const labels = ['A1','A2','A3','B1','B2','B3','C1','C2','C3'];
 
-function init() {
-    positions.forEach((pos, i) => {
+async function startCamera() {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    video.srcObject = stream;
+}
+
+function initUI() {
+    labels.forEach((label, index) => {
         // สร้าง Grid Item
         const item = document.createElement('div');
         item.className = 'grid-item';
-        item.onclick = () => selectPosition(i);
+        item.onclick = () => selectTab(index);
         gridContainer.appendChild(item);
 
-        // สร้างแถวในตาราง
+        // สร้างแถวตาราง
         const row = document.createElement('tr');
-        row.id = `row-${i}`;
-        row.innerHTML = `
-            <td>${pos}</td>
-            <td class="status-cell">--</td>
-            <td class="val-cell">--</td>
-        `;
-        resBody.appendChild(row);
+        row.id = `row-${index}`;
+        row.innerHTML = `<td>${label}</td><td class="res">--</td><td class="val">0%</td>`;
+        tableBody.appendChild(row);
     });
 }
 
-function selectPosition(index) {
-    // ลบ class active จากตัวอื่น
+function selectTab(index) {
     document.querySelectorAll('.grid-item').forEach(el => el.classList.remove('active'));
-    // เพิ่มให้ตัวที่เลือก
-    document.querySelectorAll('.grid-item')[index].classList.add('active');
+    gridContainer.children[index].classList.add('active');
 }
 
-// จำลองการอัปเดตค่า Real-time
+// จำลองการอัปเดต Real-time (จะเชื่อมกับ Logic HSV ในขั้นตอนถัดไป)
 setInterval(() => {
-    // ในขั้นตอนนี้คุณสามารถนำ Logic การวิเคราะห์ HSV มาใส่เพื่อเปลี่ยนสีข้อความจริงได้
-    // ตัวอย่างการเปลี่ยนสี:
-    // element.className = 'text-normal';
+    const activeIdx = Array.from(gridContainer.children).findIndex(el => el.classList.contains('active'));
+    if (activeIdx !== -1) {
+        const mockVal = Math.floor(Math.random() * 100);
+        const row = document.getElementById(`row-${activeIdx}`);
+        const resCell = row.querySelector('.res');
+        
+        row.querySelector('.val').innerText = mockVal + '%';
+        if (mockVal > 70) { resCell.innerText = 'Normal'; resCell.className = 'res status-normal'; }
+        else if (mockVal > 30) { resCell.innerText = 'Partial'; resCell.className = 'res status-partial'; }
+        else { resCell.innerText = 'Deficient'; resCell.className = 'res status-deficient'; }
+    }
 }, 1000);
 
-init();
+startCamera();
+initUI();
