@@ -1,64 +1,11 @@
-:root {
-    --primary-color: #00e5ff;
-    --bg-color: #121212;
-    --panel-bg: #1e1e1e;
-}
-
-body {
-    margin: 0;
-    font-family: -apple-system, sans-serif;
-    background-color: var(--bg-color);
-    color: white;
-    overflow: hidden; /* ป้องกันการเลื่อนหน้าจอขณะใช้งาน */
-}
-
-.app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-.summary-panel {
-    background: var(--panel-bg);
-    padding: 12px;
-    font-size: 0.9rem;
-    color: var(--primary-color);
-    text-align: center;
-    border-bottom: 1px solid #333;
-    line-height: 1.4;
-}
-
-.viewport {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000;
-    position: relative;
-}
-
-#outputCanvas {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-footer {
-    padding: 20px;
-    text-align: center;
-    background: var(--panel-bg);
-}
-
-.btn-primary {
-    background: var(--primary-color);
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.hint {
-    font-size: 0.75rem;
-    color: #888;
-    margin-top: 10px;
-}
+:root { --bg: #000; --panel: #1a1a1a; --main: #00e5ff; }
+body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg); font-family: sans-serif; overflow: hidden; }
+.app-container { display: flex; flex-direction: column; height: 100vh; }
+.summary { height: 50px; background: var(--panel); color: var(--main); display: flex; align-items: center; justify-content: center; font-weight: bold; border-bottom: 1px solid #333; }
+.viewport { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; background: #000; overflow: hidden; }
+#outputCanvas { max-width: 100%; max-height: 100%; object-fit: contain; }
+.control-panel { height: 90px; background: var(--panel); display: flex; justify-content: space-around; align-items: center; padding: 0 10px; }
+button { border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-main { background: var(--main); color: #000; padding: 15px 35px; border-radius: 30px; font-size: 1.1rem; }
+.btn-sec { background: #444; color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 0.9rem; }
+button:disabled { opacity: 0.3; }
